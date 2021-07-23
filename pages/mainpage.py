@@ -1,5 +1,8 @@
 from typing import List 
 
+from selenium.webdriver.common.keys import Keys
+from locators.homepage import HomePage
+
 class PowerToChoose:
     
     def __init__(self, browser):
@@ -10,7 +13,29 @@ class PowerToChoose:
     def __repr__(self):
         return f"<selenium.webdriver.chrome.webdriver.WebDriver {self.browser.current_url}>"
 
-    def zipcode_entry(self,int: zipcode):
-        pass 
+    
+    def zipcode_entry(self, zipcode: str):
+        #get the locator for textbox for zipocde entry
+        zip_text = HomePage.ZIPCODE
+        element = self.browser.find_element_by_id(zip_text)
+        element.send_keys(zipcode)
+        return element.send_keys(Keys.RETURN)
+
+    @property
+    def view_rates(self):
+        #find button for clikcing rates
+        view_rates_button = HomePage.VIEWRATES
+        element = self.browser.find_element_by_css_selector(view_rates_button)
+        return element 
+        #element.click()
+
+
+
+
+        
+
+
+
+
 
     
