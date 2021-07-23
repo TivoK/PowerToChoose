@@ -7,7 +7,7 @@ from pages.mainpage import PowerToChoose
 
 zipcode = input("Enter the zip code you are searching for Rates: ")
  
-print(type(zipcode))
+#print(type(zipcode))
 #get the webdriver path
 chrome = webdriver.Chrome(executable_path = './chromedriver/chromedriver.exe')
 #go to webpage 
