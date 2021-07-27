@@ -19,6 +19,10 @@ Site.zipcode_entry(zipcode)
 
 Site.view_rates.click()
 
+#print(Site.all_plans.is_displayed())
+Site.all_plans.click()
+
+
 #print(type(chrome))
 
 

@@ -3,3 +3,6 @@ class HomePage:
     ZIPCODE =   'homezipcode'
     VIEWRATES = 'a[id="view_all_results"]'
     FOUNDMSG =  'foundmessage'
+
+class RatePlans:
+    PRICINGANDBILLING = 'div[class="rad-area rad-unchecked"]'

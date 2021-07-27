@@ -1,7 +1,8 @@
 from typing import List 
 
 from selenium.webdriver.common.keys import Keys
-from locators.homepage import HomePage
+from locators.homepage import HomePage, RatePlans
+
 
 class PowerToChoose:
     
@@ -29,6 +30,12 @@ class PowerToChoose:
         return element 
         #element.click()
 
+    @property
+    def all_plans(self):
+        
+        select_all_plans = RatePlans.PRICINGANDBILLING
+        element = self.browser.find_element_by_css_selector(select_all_plans)
+        return element 
 
 
 
