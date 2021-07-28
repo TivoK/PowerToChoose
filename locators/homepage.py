@@ -6,3 +6,5 @@ class HomePage:
 
 class RatePlans:
     PRICINGANDBILLING = 'div[class="rad-area rad-unchecked"]'
+    PLANTYPE = 'div[class="chk-area chk-unchecked"]'
+    

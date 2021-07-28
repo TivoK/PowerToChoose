@@ -37,6 +37,18 @@ class PowerToChoose:
         element = self.browser.find_element_by_css_selector(select_all_plans)
         return element 
 
+    @property
+    def select_plan_type(self):
+        checkbox = RatePlans.PLANTYPE
+        element =  self.browser.find_element_by_css_selector(checkbox)
+        return element 
+
+
+    @property
+    def current_url(self):
+        return self.browser.current_url
+
+
 
 
         
