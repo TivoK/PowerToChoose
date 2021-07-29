@@ -1,5 +1,9 @@
 from typing import List 
 
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
+
 from selenium.webdriver.common.keys import Keys
 from locators.homepage import HomePage, RatePlans
 
@@ -34,19 +38,32 @@ class PowerToChoose:
     def all_plans(self):
         
         select_all_plans = RatePlans.PRICINGANDBILLING
-        element = self.browser.find_element_by_css_selector(select_all_plans)
+        #element = self.browser.find_element_by_css_selector(select_all_plans)
+        element = self.browser.find_element_by_xpath(select_all_plans)
+
         return element 
 
     @property
     def select_plan_type(self):
         checkbox = RatePlans.PLANTYPE
-        element =  self.browser.find_element_by_css_selector(checkbox)
+        #element =  self.browser.find_element_by_css_selector(checkbox)
+        element =  self.browser.find_element_by_xpath(checkbox)
         return element 
 
 
     @property
     def current_url(self):
         return self.browser.current_url
+
+
+    def click_hidden_button(self, button_id: str):
+        #maximum amount of time we want to wait is 10 secx
+        WebDriverWait(self.browser, 60).until(
+            expected_conditions.element_to_be_clickable(
+                (By.ID, button_id)
+            )
+        ).click()
+
 
 
 
