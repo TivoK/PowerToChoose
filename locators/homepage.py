@@ -6,8 +6,13 @@ class HomePage:
 
 
 class RatePlans:
-    PRICINGANDBILLING = '//*[@id="resultsForm"]/div/aside/div[2]/div[5]/ul/li[1]/div'
-        #'div[class="rad-area rad-unchecked"]'
-    PLANTYPE = '//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[3]/div'
-    #'div[class="chk-area chk-unchecked"]'
-    
+    #Check box selectors
+    PLANS = { 
+        'INDEXPLAN' : '//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[3]/div'
+        ,'VARIABLEPLAN' : '//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[2]/div'
+        ,'FIXEDPLAN' : '//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[1]/div'
+    }
+
+
+class PricingBilling:
+    SHOWALLPLANS = '//*[@id="resultsForm"]/div/aside/div[2]/div[5]/ul/li[1]/div'
