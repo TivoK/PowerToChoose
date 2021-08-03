@@ -24,7 +24,7 @@ Site.zipcode_entry(zipcode)
 
 Site.view_rates.click()
 
-html = Site.browser.page_source
+html = Site.page #.browser.page_source
 
 #print(Site.all_plans.is_displayed())
 # Site.all_plans.click()
@@ -42,12 +42,17 @@ html = Site.browser.page_source
 
 #page = RatePageScraper(url).page
 
-soup = BeautifulSoup(html ,'html.parser')
+#soup = Site.soup#BeautifulSoup(html ,'html.parser')
 
 
 #print(soup.prettify())
 
-chklist = soup.find_all('ul',class_ = 'check-list')
+#cb = soup.find(attrs = {"id": "cb1"})
+#print(cb.parent.find('div').attrs['class'][1])
+
+cb = Site.get_checkbox_status('cb1')
+print(cb)
+
 #print(chklist[0])
 
 # for item in chklist[0]:

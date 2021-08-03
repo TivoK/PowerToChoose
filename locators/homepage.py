@@ -6,11 +6,11 @@ class HomePage:
 
 
 class RatePlans:
-    #Check box selectors
+    #Check box selectors xpaths and ids 
     PLANS = { 
-        'INDEXPLAN' : '//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[3]/div'
-        ,'VARIABLEPLAN' : '//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[2]/div'
-        ,'FIXEDPLAN' : '//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[1]/div'
+        'INDEXPLAN' : ('//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[3]/div' , 'cb3')
+        ,'VARIABLEPLAN' : ('//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[2]/div','cb2')
+        ,'FIXEDPLAN' : ('//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[1]/div','cb1')
     }
 
 

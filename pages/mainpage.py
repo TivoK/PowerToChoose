@@ -1,5 +1,6 @@
 from typing import List 
 
+from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
@@ -14,12 +15,12 @@ class PowerToChoose:
     def __init__(self, browser):
         #pass in the browser we opened up
         self.browser = browser 
+        self.page = browser.page_source
     
     #show the current url for the WebDriver class in repr
     def __repr__(self):
         return f"<selenium.webdriver.chrome.webdriver.WebDriver {self.browser.current_url}>"
 
-    
     def zipcode_entry(self, zipcode: str):
         #get the locator for textbox for zipocde entry
         zip_text = HomePage.ZIPCODE
@@ -52,7 +53,6 @@ class PowerToChoose:
     def current_url(self):
         return self.browser.current_url
 
-
     def click_button(self, xpath: str):
         try:
              #maximum amount of time we want to wait is 10 secx
@@ -64,19 +64,43 @@ class PowerToChoose:
         #raise custom xpath error 
         except NoSuchElementException:
             raise InvalidXPath(
-                f'XPATH: "{xpaht}" was not found.'
+                f'XPATH: "{xpath}" was not found.'
             )
         
 
     def select_all_plantypes(self):
         #xpaths in RatePlan class
         for xp in RatePlans.PLANS.values():
-            self.click_button(xp) 
+            #get the checkbox status and see what if its not checked..
+            if self.get_checkbox_status(xp[1]) != 'chk-checked':
+                #pass in the xpath
+                self.click_button(xp[0]) 
         
     def select_show_all_plans(self):
         #select the raido button show all plans 
         select_all_plans = PricingBilling.SHOWALLPLANS
         self.click_button(select_all_plans)
+
+    def update_page(self):
+        #update the current page 
+        self.page = self.browser.page_source
+
+
+    @property
+    def soup(self):
+        #update the page 
+        self.update_page()
+        return BeautifulSoup(self.page, 'html.parser')
+
+
+    def get_checkbox_status(self, id_name: str) ->str:
+        soup = self.soup
+        cb = soup.find(attrs = {'id': id_name})
+        #return the status id 
+        return cb.parent.find('div').attrs['class'][1]
+
+
+    
         
 
 
