@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import Select
 
 from selenium.webdriver.common.keys import Keys
 from locators.homepage import HomePage, RatePlans, PricingBilling
@@ -34,6 +35,19 @@ class PowerToChoose:
         view_rates_button = HomePage.VIEWRATES
         element = self.browser.find_element_by_css_selector(view_rates_button)
         return element 
+
+    @property
+    def select_plan_dropdown(self) -> Select:
+        drop_down_xpath = RatePlans.ALLPLANDROPDOWN
+        element = self.browser.find_element_by_xpath(drop_down_xpath)
+        return Select(element)
+
+    
+    @property
+    def view_all_plans(self):
+        self.select_plan_dropdown.select_by_visible_text(
+            RatePlans.SEEALLPLANS)
+        #self.select_all_plans.select_by_visible_text(RatePlan.SEEALLPLANS)
 
     # @property
     # def all_plans(self):

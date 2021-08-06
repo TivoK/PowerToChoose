@@ -65,3 +65,4 @@ Site.select_all_plantypes()
 #Site.click_hidden_button('rm0')
 #button1 = Site.browser.find_element_by_id('rm0')
 #button1 = soup.find(attrs = {"id": "rm0"})
+Site.view_all_plans

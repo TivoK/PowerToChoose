@@ -12,7 +12,10 @@ class RatePlans:
         ,'VARIABLEPLAN' : ('//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[2]/div','cb2')
         ,'FIXEDPLAN' : ('//*[@id="resultsForm"]/div/aside/div[2]/div[6]/ul/li[1]/div','cb1')
     }
-
+    #XPATH FOR DROP DOWN
+    ALLPLANDROPDOWN = '//*[@id="pagesize"]'
+    #tag name for all plans in drop down
+    SEEALLPLANS = 'SEE ALL'
 
 class PricingBilling:
     SHOWALLPLANS = '//*[@id="resultsForm"]/div/aside/div[2]/div[5]/ul/li[1]/div'
