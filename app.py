@@ -7,7 +7,7 @@ from pages.mainpage import PowerToChoose
 #from scrapers.test import RatePageScraper
 
 from locators.homepage import RatePlans
-    
+from bs4 import BeautifulSoup    
 
 
 zipcode = input("Enter the zip code you are searching for Rates: ")
@@ -66,3 +66,24 @@ Site.select_all_plantypes()
 #button1 = Site.browser.find_element_by_id('rm0')
 #button1 = soup.find(attrs = {"id": "rm0"})
 Site.view_all_plans
+
+ss = Site.soup
+
+sss =ss.find_all('tr', class_= 'row active')
+company = sss[0].find('div',class_ = 'userratings')['title'].split('Scorecard')[0]
+print(company)
+
+print(sss[0].find('ul', class_ ='plan-info').find_all('li',class_ ='grid-element')[0].contents)
+
+
+
+# ddd =BeautifulSoup(row, 'html.parser')
+
+# print(ddd.select_one("userrating"))
+# print(ddd.select("item td-plan"))
+# print(ddd.select("item td-price"))
+
+
+#userratings
+#item td-plan
+#'item td-price"
