@@ -1,4 +1,5 @@
 
+import re
 from selenium import webdriver
 from bs4 import BeautifulSoup
 
@@ -72,11 +73,20 @@ ss = Site.soup
 sss =ss.find_all('tr', class_= 'row active')
 company = sss[0].find('div',class_ = 'userratings')['title'].split('Scorecard')[0]
 print(company)
+#plan name
+print(sss[0].find('ul', class_ ='plan-info').find_all('li',limit = 1)[0].string)
+#plan length
+print(len(sss[0].find_all('li',class_ ='grid-element')))
+#plan_attributes
+plan_attr = sss[0].find_all('li',class_ ='grid-element')
 
-print(sss[0].find('ul', class_ ='plan-info').find_all('li',class_ ='grid-element')[0].contents)
+for attr in plan_attr:
+    pa = str(attr.string).strip()
+    if len(pa)>1 and pa !='None':   
+        print(pa)
 
-
-
+prices = sss[0].find('td' , class_ ='item td-price').find('div').contents
+print(prices)
 # ddd =BeautifulSoup(row, 'html.parser')
 
 # print(ddd.select_one("userrating"))
