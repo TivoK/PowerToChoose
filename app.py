@@ -86,8 +86,36 @@ for attr in plan_attr:
         print(pa)
 
 prices = sss[0].find('td' , class_ ='item td-price').find('div').contents
+#print(prices[0].strip())
+#price1 = sss[0].find('strong' , class_ ='price').contents
+#print(price1[0])
+
+usage_pattern = '[0-9,]*\skWh|[0-9]*\skWh'
+rate_pattern  = '[0-9]*\.[0-9]*¢|[0-9]*¢'  
+usages =[]
+rates=[]
+for i in prices:
+    #print(type(i))
+    #print(type(str(i)))
+    print(type(i.string))
+    find_usage = re.findall(usage_pattern,str(i))
+    print(find_usage)
+    usages.extend(find_usage)
+
+    find_rate = re.findall(rate_pattern,str(i))
+    print(find_rate)
+    rates.extend(find_rate)
+    # if type(i.string) != 'NoneType':
+    #     usages.append(find.group(0))
+
+
 print(prices)
-# ddd =BeautifulSoup(row, 'html.parser')
+print(usages)
+print(rates)
+print(dict(zip(usages,rates)))
+#price2 = sss[0].find_all('div' , class_ ='unit').string
+#print(price2)
+#¢
 
 # print(ddd.select_one("userrating"))
 # print(ddd.select("item td-plan"))
