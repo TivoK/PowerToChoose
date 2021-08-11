@@ -9,7 +9,7 @@ from pages.mainpage import PowerToChoose
 
 from locators.homepage import RatePlans
 from bs4 import BeautifulSoup    
-
+from scrapers.test import RateScrape
 
 zipcode = input("Enter the zip code you are searching for Rates: ")
  
@@ -70,49 +70,61 @@ Site.view_all_plans
 
 ss = Site.soup
 
-sss =ss.find_all('tr', class_= 'row active')
-company = sss[0].find('div',class_ = 'userratings')['title'].split('Scorecard')[0]
-print(company)
-#plan name
-print(sss[0].find('ul', class_ ='plan-info').find_all('li',limit = 1)[0].string)
-#plan length
-print(len(sss[0].find_all('li',class_ ='grid-element')))
-#plan_attributes
-plan_attr = sss[0].find_all('li',class_ ='grid-element')
+RateScraper = RateScrape(ss)
+rate_data = RateScraper.rate_table
 
-for attr in plan_attr:
-    pa = str(attr.string).strip()
-    if len(pa)>1 and pa !='None':   
-        print(pa)
+for row_num, row_data in enumerate(rate_data[0:3], start =1):
+    print(f'plan: {row_num}')
+    print(RateScraper.get_company_name(row_data))
+    print(RateScraper.get_plan_name(row_data))
+    print(f'plan att count: {RateScraper.get_plan_attributes_count(row_data)}')
+    print(RateScraper.get_plan_attributes(row_data))
+    print(RateScraper.get_plan_rates(row_data))
 
-prices = sss[0].find('td' , class_ ='item td-price').find('div').contents
-#print(prices[0].strip())
-#price1 = sss[0].find('strong' , class_ ='price').contents
-#print(price1[0])
+# sss =ss.find_all('tr', class_= 'row active')
 
-usage_pattern = '[0-9,]*\skWh|[0-9]*\skWh'
-rate_pattern  = '[0-9]*\.[0-9]*¢|[0-9]*¢'  
-usages =[]
-rates=[]
-for i in prices:
-    #print(type(i))
-    #print(type(str(i)))
-    print(type(i.string))
-    find_usage = re.findall(usage_pattern,str(i))
-    print(find_usage)
-    usages.extend(find_usage)
 
-    find_rate = re.findall(rate_pattern,str(i))
-    print(find_rate)
-    rates.extend(find_rate)
+# print(f'sss type: {type(sss[0])}')
+
+# company = sss[0].find('div',class_ = 'userratings')['title'].split('Scorecard')[0]
+# print(company)
+# #plan name
+# print(sss[0].find('ul', class_ ='plan-info').find_all('li',limit = 1)[0].string)
+# #plan length
+# print(len(sss[0].find_all('li',class_ ='grid-element')))
+# #plan_attributes
+# plan_attr = sss[0].find_all('li',class_ ='grid-element')
+
+# for attr in plan_attr:
+#     pa = str(attr.string).strip()
+#     if len(pa)>1 and pa !='None':   
+#         print(pa)
+
+# prices = sss[0].find('td' , class_ ='item td-price').find('div').contents
+
+# usage_pattern = '[0-9,]*\skWh|[0-9]*\skWh'
+# rate_pattern  = '[0-9]*\.[0-9]*¢|[0-9]*¢'  
+# usages =[]
+# rates=[]
+# for i in prices:
+#     #print(type(i))
+#     #print(type(str(i)))
+#     print(type(i.string))
+#     find_usage = re.findall(usage_pattern,str(i))
+#     print(find_usage)
+#     usages.extend(find_usage)
+
+#     find_rate = re.findall(rate_pattern,str(i))
+#     print(find_rate)
+#     rates.extend(find_rate)
     # if type(i.string) != 'NoneType':
     #     usages.append(find.group(0))
 
 
-print(prices)
-print(usages)
-print(rates)
-print(dict(zip(usages,rates)))
+# #print(prices)
+# print(usages)
+# print(rates)
+# print(dict(zip(usages,rates)))
 #price2 = sss[0].find_all('div' , class_ ='unit').string
 #print(price2)
 #¢
