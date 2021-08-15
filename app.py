@@ -80,7 +80,13 @@ for row_num, row_data in enumerate(rate_data[0:3], start =1):
     print(f'plan att count: {RateScraper.get_plan_attributes_count(row_data)}')
     print(RateScraper.get_plan_attributes(row_data))
     print(RateScraper.get_plan_rates(row_data))
+    print(RateScraper.get_all_attributes_names)
+    print(RateScraper.get_all_usage_names)
+    print(RateScraper.get_row_data(row_data))
+    #print(RateScraper.create_data_dictionary())
 
+df = RateScraper.to_datafame()
+print(df.head())
 # sss =ss.find_all('tr', class_= 'row active')
 
 

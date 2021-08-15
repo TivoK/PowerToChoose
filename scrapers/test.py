@@ -1,4 +1,5 @@
 import re 
+import pandas as pd
 
 usage_pattern = '[0-9,]*\skWh|[0-9]*\skWh'
 rate_pattern  = '[0-9]*\.[0-9]*¢|[0-9]*¢' 
@@ -15,23 +16,23 @@ class RateScrape:
     def rate_table(self):
         return self.soup.find_all('tr', class_= 'row active')
 
-    def get_company_name(self, element) -> str:
+    def get_company_name(self, element) -> dict:
         """
         Returns the compnay from a Table row from bs4 Result set
         element 
         """
         #return the title attirbute and remove "Score Card" from name
         company = element.find('div',class_ = 'userratings')['title'].split('Scorecard')[0]
-        return company
+        return {'CompanyName' : company}
 
-    def get_plan_name(self, element) -> str:
+    def get_plan_name(self, element) -> dict:
         """
         Returns the plan name from a Table row from bs4 Result set
         element 
         """
         plan_name = element.find('ul', class_ ='plan-info').find_all(
         'li',limit = 1)[0].string
-        return plan_name
+        return {'Plan' : plan_name}
  
     def get_plan_attributes(self,element) ->dict:
         """
@@ -89,17 +90,72 @@ class RateScrape:
 
         return dict(zip(usages,rates))
 
+    @property
+    def get_all_attributes_names(self) -> list:
+        """
+        iterates through all the rows of the Rate table 
+        and sees how many differnt attributes are listed. 
+        this will utilized when creating dataframe column names.. 
+        """
+        rate_table = self.rate_table
+        name_list = list()
+        for row in rate_table:
+            names = self.get_plan_attributes(row).keys()
+            name_list.extend(names)
+        return sorted(set(name_list))
 
+    @property    
+    def get_all_usage_names(self) -> list:
+        """
+        iterates through all the rows of the Rate table 
+        and sees how many differnt usage tiers are listed for each
+        rate plan..  
+        """
+        rate_table = self.rate_table
+        rate_list = list()
+        for row in rate_table:
+            rates = self.get_plan_rates(row).keys()
+            rate_list.extend(rates)
+        return sorted(set(rate_list))
+            
+    
+    def create_data_dictionary_columns(self) -> list:
+        """
+        creates a list with column names .
+        """
+        columns = ['CompanyName','Plan']
+        columns.extend(self.get_all_usage_names)
+        columns.extend(self.get_all_attributes_names)
+        return columns 
+        
+    def get_row_data(self,element) -> dict:
+        """
+        returns a dictinary for a single table row in the parsed
+        data table from PowerToChoose site.
+        """
+        #get the column names we in our dictionary
+        return_data = dict().fromkeys(self.create_data_dictionary_columns())
+        #get the data from the row we are extracting 
+        row_data = self.get_company_name(element)
+        #append other data points to row_data
+        row_data.update(self.get_plan_name(element))    
+        row_data.update(self.get_plan_rates(element))
+        row_data.update(self.get_plan_attributes(element))
+        
+        #update return data
+        for column in return_data.keys():
+            if column in row_data:
+                return_data[column] = row_data[column]
 
-#pattern  = '[0-9]*\.[0-9]*¢|[0-9]*¢'  
-#usage_pattern = '[0-9]*\skWh'
-# test =['<div class="unit">500 kWh <span>10¢</span></div>', '<div class="unit">2000 kWh <span>8.8¢</span></div>']
+        return return_data
 
-# find = re.search(usage_pattern, test[0])
+    def to_datafame(self):
+        
+        rate_table = self.rate_table
+        row_list = list()
+        for row in rate_table:
+            data = self.get_row_data(row)
+            row_list.append(data)
 
-# print(find.group(0))
+        return pd.DataFrame(row_list)
 
-
-# find = re.search(pattern, test[0])
-
-# print(find.group(0))
