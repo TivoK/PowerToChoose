@@ -36,6 +36,8 @@ class PowerToChoose:
         element = self.browser.find_element_by_css_selector(view_rates_button)
         return element 
 
+   
+
     @property
     def select_plan_dropdown(self) -> Select:
         drop_down_xpath = RatePlans.ALLPLANDROPDOWN
@@ -113,6 +115,34 @@ class PowerToChoose:
         #return the status id 
         return cb.parent.find('div').attrs['class'][1]
 
+    
+     
+    def is_zip_not_found(self):
+        """
+        returns a bool, if we find not found pop up 
+        box for entered zips.
+        """
+        not_found = HomePage.ZIPNOTFOUND
+        pop_up= self.browser.find_element_by_css_selector(not_found)
+        #soup = self.soup
+        #find by Css selector 
+        pop_up_display = pop_up.is_displayed()
+        #lens = len(self.browser.find_elements_by_css_selector(not_found))
+        #print(f'len:{lens}')
+        #print(pop_up.get_attribute('style'))
+        #print(pop_up.is_displayed())
+
+        
+        #print(pop_up.get_attribute('style'))
+        #print(pop_up.is_displayed())
+
+
+        #pop_up = soup.find('div', attrs= {"id": 'not-found'}).attrs['style']
+        return pop_up.is_displayed()
+
+    def close_zip_not_found(self):
+        xpath = HomePage.NOTFOUNDCLOSEXPATH
+        self.click_button(xpath)
 
     
         

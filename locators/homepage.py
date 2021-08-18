@@ -3,7 +3,8 @@ class HomePage:
     ZIPCODE =   'homezipcode'
     VIEWRATES = 'a[id="view_all_results"]'
     FOUNDMSG =  'foundmessage'
-
+    ZIPNOTFOUND = 'div[id="not-found"]'
+    NOTFOUNDCLOSEXPATH = '//*[@id="not-found"]/a'
 
 class RatePlans:
     #Check box selectors xpaths and ids 
