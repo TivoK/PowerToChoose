@@ -145,7 +145,14 @@ class PowerToChoose:
         self.click_button(xpath)
 
     
-        
+def zip_entry_length():
+    zipcode = input("Enter the zip code you are searching for Rates: ")
+
+    while len(zipcode) != 5:
+        print('Zip Code must be of 5 digit length.')
+        zipcode = input("Enter the zip code you are searching for Rates: ")
+    
+    return zipcode
 
 
 class InvalidXPath(ValueError):
