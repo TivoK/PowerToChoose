@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.ui import Select
 
 from selenium.webdriver.common.keys import Keys
@@ -126,7 +126,6 @@ class PowerToChoose:
         pop_up= self.browser.find_element_by_css_selector(not_found)
         #soup = self.soup
         #find by Css selector 
-        pop_up_display = pop_up.is_displayed()
         #lens = len(self.browser.find_elements_by_css_selector(not_found))
         #print(f'len:{lens}')
         #print(pop_up.get_attribute('style'))
@@ -144,12 +143,42 @@ class PowerToChoose:
         xpath = HomePage.NOTFOUNDCLOSEXPATH
         self.click_button(xpath)
 
+
+    def invalid_zip(self):
+        xpath = HomePage.NOTFOUNDCLOSEXPATH
+
+        try:
+            #maximum amount of time we want to wait is 10 secx
+            element = WebDriverWait(self.browser, 5).until(
+                expected_conditions.element_to_be_clickable(
+                    (By.XPATH, xpath)
+                )
+            )
+
+            return element.is_displayed()
+        #if we cant find close box for invalid pop up then
+        #rate is valid ie False
+        except TimeoutException:
+            return False 
+
+
+                
     
 def zip_entry_length():
     zipcode = input("Enter the zip code you are searching for Rates: ")
 
-    while len(zipcode) != 5:
-        print('Zip Code must be of 5 digit length.')
+    while len(zipcode) != 5 or zipcode.isdigit() != True:
+        
+        message =str()
+        error1 = ' Zip Code must be length of 5.'
+        error2 = ' Zip Code must only contain numbers.'
+
+        if len(zipcode) != 5:
+            message +=error1
+        if zipcode.isdigit() != True:
+            message +=error2
+
+        print(message)
         zipcode = input("Enter the zip code you are searching for Rates: ")
     
     return zipcode

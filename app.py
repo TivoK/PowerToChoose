@@ -20,7 +20,7 @@ from selenium.webdriver.common.alert import Alert
 #     zipcode = input("Enter the zip code you are searching for Rates: ")
  
 #get the entry...
-zipcode = zip_entry_length()
+#zipcode = zip_entry_length()
 
 #get the webdriver path
 chrome = webdriver.Chrome(executable_path = './chromedriver/chromedriver.exe')
@@ -29,18 +29,34 @@ chrome.get('http://powertochoose.org')
 
 Site = PowerToChoose(chrome)
 #this passes in the 
-Site.zipcode_entry(zipcode)
+#Site.zipcode_entry(zipcode)
 
-while Site.is_zip_not_found() == True:
+is_invalid_zipcode = None
 
-        Site.browser.refresh()
-        print("Zip Not Valid.")
-       # Site.close_zip_not_found()
-        rentry_zip = zip_entry_length()
-        Site.zipcode_entry(rentry_zip)
+while is_invalid_zipcode  != False:
+    #Refresh the web-browser 
+    #this is necessary if a bad zip code is passed;
+    #will reset the pop up  to style: none 
+    Site.browser.refresh()
+    #check for length/non-digit entries...
+    zipcode = zip_entry_length()
+
+    Site.zipcode_entry(zipcode)
+    #here we are checking if the 
+    #bad zip pop up appears. 
+    is_invalid_zipcode = Site.invalid_zip()
+    #is_invalid_zipcode = Site.is_zip_not_found()  
+    print(f'test loop: {is_invalid_zipcode}')
     
-    
+    if is_invalid_zipcode == True:
+        print('Zip Code not Valid.')
+   
+ 
+    #test2 = test
 
+#print(test2)  
+print(Site.is_zip_not_found())
+print(Site.is_zip_not_found())
  
 
 #print(Site.browser)
