@@ -11,7 +11,7 @@ from locators.homepage import RatePlans
 from bs4 import BeautifulSoup    
 from scrapers.test import RateScrape
 from selenium.webdriver.common.alert import Alert
-from menu import check_path
+from menu import path_entry, save_as
 
 
 # zipcode = input("Enter the zip code you are searching for Rates: ")
@@ -67,7 +67,8 @@ print(df_rates.head())
 
 Site.browser.quit()
 
-path = input('insert path to save file: ')
 
-print(check_path(path))
+path = path_entry()
+save_as(path, df_rates)
+
 

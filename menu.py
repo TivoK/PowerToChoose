@@ -1,5 +1,6 @@
 import os 
-from datetime import datetime 
+from datetime import datetime
+ 
 
 def check_path(path: str) ->bool:
     # Check whether the  
@@ -31,5 +32,29 @@ def get_current_date() ->str:
     name = current_date.strftime("%Y%m%d_%H%M")
     return name 
 
+def save_as(path: str, df):
+    """
+    Prompts user to make selection to save dataframe 
+    as Excel or CSV file & create path to save file.
+    """
+    message ='Save file as Excel Document or CSV File? \
+             \nType (1) for Excel or (2) CSV File: '
+    file_type = input(message)
+
+    while file_type not in ('1','2'):
+        print("Type (1) for Excel or (2) CSV File")
+        file_type = input(message)
+
+    if file_type == '1':
+        excel = path + '/' + 'RATES_' + get_current_date() + '.xlsx'
+        df.to_excel(excel, index = False)
+    else:   
+        csv =  path + '/' + 'RATES_' + get_current_date() + '.csv'
+        df.to_csv(csv, index = False)
 
 
+
+#path = path_entry()
+
+##name = save_as(path)
+#print(name)
