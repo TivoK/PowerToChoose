@@ -49,6 +49,9 @@ class PowerToChoose:
     def view_all_plans(self):
         self.select_plan_dropdown.select_by_visible_text(
             RatePlans.SEEALLPLANS)
+
+
+
         #self.select_all_plans.select_by_visible_text(RatePlan.SEEALLPLANS)
 
     # @property
@@ -160,6 +163,21 @@ class PowerToChoose:
         #rate is valid ie False
         except TimeoutException:
             return False 
+
+    def navigate(self):
+        """
+        Performs actions for site navigation after a valid zip 
+        code is entered. 
+        """
+        #clcks view rate button
+        self.view_rates.click()
+        #selects show all plans button
+        self.select_show_all_plans()
+        #clicks mult plan check boxes
+        self.select_all_plantypes()
+        #view all plans per page
+        self.view_all_plans
+        
 
 
                 

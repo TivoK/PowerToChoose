@@ -11,6 +11,7 @@ from locators.homepage import RatePlans
 from bs4 import BeautifulSoup    
 from scrapers.test import RateScrape
 from selenium.webdriver.common.alert import Alert
+from menu import check_path
 
 
 # zipcode = input("Enter the zip code you are searching for Rates: ")
@@ -52,72 +53,21 @@ while is_invalid_zipcode  != False:
         print('Zip Code not Valid.')
    
  
-    #test2 = test
-
-#print(test2)  
-print(Site.is_zip_not_found())
-print(Site.is_zip_not_found())
  
+#click needed web page elements 
+Site.navigate()  
+#get the HTML for site when all plans are shown
+soup = Site.soup 
 
-#print(Site.browser)
-#print(Site.is_zip_not_found())
+Rates = RateScrape(soup)
 
-#Site.view_rates.click()
+df_rates = Rates.to_datafame()
 
-#html = Site.page 
+print(df_rates.head())
 
-##################################################
-#.browser.page_source
+Site.browser.quit()
 
-#print(Site.all_plans.is_displayed())
-# Site.all_plans.click()
+path = input('insert path to save file: ')
 
-# Site.select_plan_type.click()
-# Site.select_plan_type.click()
+print(check_path(path))
 
-# #Site.select_plan_type.click()
-# #Site.select_plan_type.click()
-# #Site.select_plan_type.click()
-
-# url = Site.current_url
-# print(url)
-
-
-#page = RatePageScraper(url).page
-
-#soup = Site.soup#BeautifulSoup(html ,'html.parser')
-
-
-#print(soup.prettify())
-
-#cb = soup.find(attrs = {"id": "cb1"})
-#print(cb.parent.find('div').attrs['class'][1])
-#################################################################
-
-# cb = Site.get_checkbox_status('cb1')
-# print(cb)
-
-# Site.select_show_all_plans()
-# Site.select_all_plantypes()
-
-# Site.view_all_plans
-
-# ss = Site.soup
-
-# RateScraper = RateScrape(ss)
-# rate_data = RateScraper.rate_table
-
-# for row_num, row_data in enumerate(rate_data[0:3], start =1):
-#     print(f'plan: {row_num}')
-#     print(RateScraper.get_company_name(row_data))
-#     print(RateScraper.get_plan_name(row_data))
-#     print(f'plan att count: {RateScraper.get_plan_attributes_count(row_data)}')
-#     print(RateScraper.get_plan_attributes(row_data))
-#     print(RateScraper.get_plan_rates(row_data))
-#     print(RateScraper.get_all_attributes_names)
-#     print(RateScraper.get_all_usage_names)
-#     print(RateScraper.get_row_data(row_data))
-#     #print(RateScraper.create_data_dictionary())
-
-# df = RateScraper.to_datafame()
-# print(df.head())
