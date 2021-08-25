@@ -1,5 +1,5 @@
 ## Power To Choose Web Scraper
-[PowerToChoose](PowerToChoose.org) is Texas Utility Commision website that regularly updates the latest electrical rates by Energy Retail Providers in the state of Texas.
+[PowerToChoose](www.PowerToChoose.org) is Texas Utility Commision website that regularly updates the latest electrical rates by Energy Retail Providers in the state of Texas.
 This console application will scrape this site using entered zip codes and produce either a CSV or Excel file as directed by the End-User with the listed electrical plans and their respecive prices/terms. 
 
 ### Installation
