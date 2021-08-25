@@ -1,4 +1,5 @@
 
+import logging
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
@@ -8,6 +9,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from locators.homepage import HomePage, RatePlans, PricingBilling
 
+logger = logging.getLogger('ScraperLog.mainpage')
 
 class PowerToChoose:
     
@@ -24,6 +26,7 @@ class PowerToChoose:
         """
         Enters in Zip Code into text box on Hompage
         """
+        logger.debug('Send Zip Code into Text Box')
         zip_text = HomePage.ZIPCODE
         element = self.browser.find_element_by_id(zip_text)
         element.send_keys(zipcode)
@@ -33,7 +36,8 @@ class PowerToChoose:
     def view_rates(self):
         """
         Finds view rate button on homepage
-        """     
+        """ 
+        logger.debug('Find View Rates Button')
         view_rates_button = HomePage.VIEWRATES
         element = self.browser.find_element_by_css_selector(view_rates_button)
         return element 
@@ -46,6 +50,7 @@ class PowerToChoose:
         Returns a Select object for selection
         of plan type drop down
         """
+        logger.debug('Select Plan Drop-Down')
         drop_down_xpath = RatePlans.ALLPLANDROPDOWN
         element = self.browser.find_element_by_xpath(drop_down_xpath)
         return Select(element)
@@ -56,6 +61,7 @@ class PowerToChoose:
         """
         Selects the view all plans in drop down box
         """
+        logger.debug('Selec view all plans')
         self.select_plan_dropdown.select_by_visible_text(
             RatePlans.SEEALLPLANS)
 
@@ -71,7 +77,9 @@ class PowerToChoose:
         """
         Generic method that can be leveraged to click 
         buttons.
-        """     
+        """  
+        logger.debug(f'Clicking Button for XPTH: {xpath}') 
+
         try:
              #maximum amount of time we want to wait is 10 secx
             WebDriverWait(self.browser, 10).until(
@@ -90,6 +98,7 @@ class PowerToChoose:
         """
         Select multiple check boxes for plan types.
         """
+        logger.debug('Select Multiple Check boxes for plan types')
         #xpaths in RatePlan class
         for xp in RatePlans.PLANS.values():
             #get the checkbox status and see what if its not checked..
@@ -101,6 +110,7 @@ class PowerToChoose:
         """
         Selects the raido button show all plans 
         """
+        logger.debug('Selec show all plans button')
         select_all_plans = PricingBilling.SHOWALLPLANS
         self.click_button(select_all_plans)
 
@@ -117,6 +127,7 @@ class PowerToChoose:
         """
         Returns a refreshed web page Beatuiful soup object.
         """
+        logger.debug('Get Beautiful Soup Object.')
         #update the page 
         self.update_page()
         return BeautifulSoup(self.page, 'html.parser')
@@ -128,6 +139,7 @@ class PowerToChoose:
         Checkboxes that are checked return 'chk-checked'
         
         """
+        logger.debug('Return CheckBox status')
         soup = self.soup
         cb = soup.find(attrs = {'id': id_name})
         #return the status id 
@@ -140,6 +152,7 @@ class PowerToChoose:
         Returns a bool, if we find not found pop up 
         box for entered zips.
         """
+        logger.debug('Check for invalid zip pop up display')
         not_found = HomePage.ZIPNOTFOUND
         pop_up= self.browser.find_element_by_css_selector(not_found)
         return pop_up.is_displayed()
@@ -149,6 +162,7 @@ class PowerToChoose:
         This closes the pop box that appears when a pop box 
         for a bad zip code appears.
         """
+        logger.debug('Close invalid zip pop up')
         xpath = HomePage.NOTFOUNDCLOSEXPATH
         self.click_button(xpath)
 
@@ -158,6 +172,7 @@ class PowerToChoose:
         This checks to see if an error pop up box appears 
         when an invlaid zip code is entered on the site.
         """
+        logger.debug('Check for Invalid Zip by way of clickable close button.')
         xpath = HomePage.NOTFOUNDCLOSEXPATH
 
         try:
@@ -179,6 +194,7 @@ class PowerToChoose:
         Performs actions for site navigation after a valid zip 
         code is entered. 
         """
+        logger.debug('Performing Navigation')
         #clcks view rate button
         self.view_rates.click()
         #selects show all plans button

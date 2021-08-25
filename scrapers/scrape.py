@@ -1,8 +1,13 @@
 import re 
+import logging
 import pandas as pd
+
 
 usage_pattern = '[0-9,]*\skWh|[0-9]*\skWh'
 rate_pattern  = '[0-9]*\.[0-9]*¢|[0-9]*¢' 
+
+
+logger = logging.getLogger('ScraperLog.scrape')
 
 class RateScrape:
     def __init__(self, soup):
@@ -14,6 +19,7 @@ class RateScrape:
 
     @property
     def rate_table(self):
+        logger.debug('Find Rates Table on Web Page')
         return self.soup.find_all('tr', class_= 'row active')
 
     def get_company_name(self, element) -> dict:
@@ -21,6 +27,7 @@ class RateScrape:
         Returns the compnay from a Table row from bs4 Result set
         element 
         """
+        logger.debug('Getting Company Name')
         #return the title attirbute and remove "Score Card" from name
         company = element.find('div',class_ = 'userratings')['title'].split('Scorecard')[0]
         return {'CompanyName' : company}
@@ -30,6 +37,7 @@ class RateScrape:
         Returns the plan name from a Table row from bs4 Result set
         element 
         """
+        logger.debug('Getting plan dictionary')
         plan_name = element.find('ul', class_ ='plan-info').find_all(
         'li',limit = 1)[0].string
         return {'Plan' : plan_name}
@@ -39,13 +47,15 @@ class RateScrape:
         Searches a grid to find the listed plan attributes
         """
         plan_attributes =dict()
+        logger.debug('Find Plan Attributes')
         attributes = element.find_all('li',class_ ='grid-element')
-
+        logger.debug('Iterate through Plan Attribute Grid')
         for num, attribute in enumerate(attributes, start=1):
             #remove html tags; format to string delete whitespace
             formatted_attribute = str(attribute.string).strip()
             #only store attributes that aren valid entries
             #note some attributes are listed as a string 'None'
+            logger.debug('Format Plan Attribute')
             if len(formatted_attribute)>1 and formatted_attribute !='None':   
                 attribute_name  = "Plan_Attribute"+str(num)
                 #save attribute to dict
@@ -72,6 +82,7 @@ class RateScrape:
         """
         Returns a dictionary with Plan Prices based on usage tiers
         """
+        logger.debug('Find Rate Prices')
         #select the elements with rate plan prices 
         prices = element.find('td' , class_ ='item td-price').find('div').contents
         #create empty lists to store findings
@@ -79,10 +90,12 @@ class RateScrape:
         rates=[]
         
         for i in prices:
+            logger.debug('Get Usgae with Regex')
             #use regex to find usages listed as Kwh
             find_usage = re.findall(usage_pattern,str(i))
             #append finding to list
             usages.extend(find_usage)
+            logger.debug('Get Rate with Regex')
             #use regex to find price listed in cents
             find_rate = re.findall(rate_pattern,str(i))
             #save to list
@@ -99,6 +112,7 @@ class RateScrape:
         """
         rate_table = self.rate_table
         name_list = list()
+        logger.debug('Get Attribute Names')
         for row in rate_table:
             names = self.get_plan_attributes(row).keys()
             name_list.extend(names)
@@ -113,6 +127,7 @@ class RateScrape:
         """
         rate_table = self.rate_table
         rate_list = list()
+        logger.debug('Get Usage Names')
         for row in rate_table:
             rates = self.get_plan_rates(row).keys()
             rate_list.extend(rates)
@@ -123,6 +138,7 @@ class RateScrape:
         """
         creates a list with column names .
         """
+        logger.debug('Create Dictionary columns for DataFrame')
         columns = ['CompanyName','Plan']
         columns.extend(self.get_all_usage_names)
         columns.extend(self.get_all_attributes_names)
@@ -133,6 +149,7 @@ class RateScrape:
         returns a dictinary for a single table row in the parsed
         data table from PowerToChoose site.
         """
+        logger.debug('Create Row Data for DataFrame')
         #get the column names we in our dictionary
         return_data = dict().fromkeys(self.create_data_dictionary_columns())
         #get the data from the row we are extracting 
@@ -150,7 +167,10 @@ class RateScrape:
         return return_data
 
     def to_datafame(self):
-        
+        """
+        Creates Pandas DataFrame
+        """
+        logger.debug('Create DataFrame')
         rate_table = self.rate_table
         row_list = list()
         for row in rate_table:
