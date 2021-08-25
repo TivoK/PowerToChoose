@@ -1,4 +1,3 @@
-from typing import List 
 
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
@@ -6,7 +5,6 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.ui import Select
-
 from selenium.webdriver.common.keys import Keys
 from locators.homepage import HomePage, RatePlans, PricingBilling
 
@@ -23,7 +21,9 @@ class PowerToChoose:
         return f"<selenium.webdriver.chrome.webdriver.WebDriver {self.browser.current_url}>"
 
     def zipcode_entry(self, zipcode: str):
-        #get the locator for textbox for zipocde entry
+        """
+        Enters in Zip Code into text box on Hompage
+        """
         zip_text = HomePage.ZIPCODE
         element = self.browser.find_element_by_id(zip_text)
         element.send_keys(zipcode)
@@ -31,7 +31,9 @@ class PowerToChoose:
 
     @property
     def view_rates(self):
-        #find button for clikcing rates
+        """
+        Finds view rate button on homepage
+        """     
         view_rates_button = HomePage.VIEWRATES
         element = self.browser.find_element_by_css_selector(view_rates_button)
         return element 
@@ -40,6 +42,10 @@ class PowerToChoose:
 
     @property
     def select_plan_dropdown(self) -> Select:
+        """
+        Returns a Select object for selection
+        of plan type drop down
+        """
         drop_down_xpath = RatePlans.ALLPLANDROPDOWN
         element = self.browser.find_element_by_xpath(drop_down_xpath)
         return Select(element)
@@ -47,32 +53,25 @@ class PowerToChoose:
     
     @property
     def view_all_plans(self):
+        """
+        Selects the view all plans in drop down box
+        """
         self.select_plan_dropdown.select_by_visible_text(
             RatePlans.SEEALLPLANS)
 
 
-
-        #self.select_all_plans.select_by_visible_text(RatePlan.SEEALLPLANS)
-
-    # @property
-    # def all_plans(self):
-    #     #select the show all plans  
-    #     select_all_plans = PricingBilling.SHOWALLPLANS
-    #     element = self.browser.find_element_by_xpath(select_all_plans)
-    #     return element 
-
-    # @property
-    # def select_plan_type(self):
-    #     checkbox = RatePlans.PLANTYPE
-    #     #element =  self.browser.find_element_by_css_selector(checkbox)
-    #     element =  self.browser.find_element_by_xpath(checkbox)
-    #     return element 
-
     @property
     def current_url(self):
+        """
+        Returns current web url on Web Driver
+        """
         return self.browser.current_url
 
     def click_button(self, xpath: str):
+        """
+        Generic method that can be leveraged to click 
+        buttons.
+        """     
         try:
              #maximum amount of time we want to wait is 10 secx
             WebDriverWait(self.browser, 10).until(
@@ -88,6 +87,9 @@ class PowerToChoose:
         
 
     def select_all_plantypes(self):
+        """
+        Select multiple check boxes for plan types.
+        """
         #xpaths in RatePlan class
         for xp in RatePlans.PLANS.values():
             #get the checkbox status and see what if its not checked..
@@ -96,23 +98,36 @@ class PowerToChoose:
                 self.click_button(xp[0]) 
         
     def select_show_all_plans(self):
-        #select the raido button show all plans 
+        """
+        Selects the raido button show all plans 
+        """
         select_all_plans = PricingBilling.SHOWALLPLANS
         self.click_button(select_all_plans)
 
     def update_page(self):
+        """
+        Retrieves page source from Web Driver
+        """
         #update the current page 
         self.page = self.browser.page_source
 
 
     @property
     def soup(self):
+        """
+        Returns a refreshed web page Beatuiful soup object.
+        """
         #update the page 
         self.update_page()
         return BeautifulSoup(self.page, 'html.parser')
 
 
     def get_checkbox_status(self, id_name: str) ->str:
+        """
+        Returns the status of check boxes. 
+        Checkboxes that are checked return 'chk-checked'
+        
+        """
         soup = self.soup
         cb = soup.find(attrs = {'id': id_name})
         #return the status id 
@@ -122,32 +137,27 @@ class PowerToChoose:
      
     def is_zip_not_found(self):
         """
-        returns a bool, if we find not found pop up 
+        Returns a bool, if we find not found pop up 
         box for entered zips.
         """
         not_found = HomePage.ZIPNOTFOUND
         pop_up= self.browser.find_element_by_css_selector(not_found)
-        #soup = self.soup
-        #find by Css selector 
-        #lens = len(self.browser.find_elements_by_css_selector(not_found))
-        #print(f'len:{lens}')
-        #print(pop_up.get_attribute('style'))
-        #print(pop_up.is_displayed())
-
-        
-        #print(pop_up.get_attribute('style'))
-        #print(pop_up.is_displayed())
-
-
-        #pop_up = soup.find('div', attrs= {"id": 'not-found'}).attrs['style']
         return pop_up.is_displayed()
 
     def close_zip_not_found(self):
+        """
+        This closes the pop box that appears when a pop box 
+        for a bad zip code appears.
+        """
         xpath = HomePage.NOTFOUNDCLOSEXPATH
         self.click_button(xpath)
 
 
     def invalid_zip(self):
+        """
+        This checks to see if an error pop up box appears 
+        when an invlaid zip code is entered on the site.
+        """
         xpath = HomePage.NOTFOUNDCLOSEXPATH
 
         try:
@@ -177,12 +187,13 @@ class PowerToChoose:
         self.select_all_plantypes()
         #view all plans per page
         self.view_all_plans
-        
-
-
-                
+                       
     
 def zip_entry_length():
+    """
+    This prompts user to enter a zip of valid length.
+    Also checks for non digit entries.
+    """
     zipcode = input("Enter the zip code you are searching for Rates: ")
 
     while len(zipcode) != 5 or zipcode.isdigit() != True:

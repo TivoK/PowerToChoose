@@ -1,5 +1,9 @@
 import os 
 from datetime import datetime
+from selenium import webdriver
+from scrapers.scrape import RateScrape
+from pages.mainpage import PowerToChoose, zip_entry_length
+
  
 
 def check_path(path: str) ->bool:
@@ -53,8 +57,57 @@ def save_as(path: str, df):
         df.to_csv(csv, index = False)
 
 
+def scrape_rates():
+    """ 
+    This function will navigate site and pull output a CSV
+    or a Excel file of the rates for a given Texas Zip Code.
+    """
 
-#path = path_entry()
+    #get the webdriver path
+    chrome = webdriver.Chrome(executable_path = './chromedriver/chromedriver.exe')
+    
+    #go to webpage / open web browser
+    chrome.get('http://powertochoose.org')
 
-##name = save_as(path)
-#print(name)
+    Site = PowerToChoose(chrome)
+    
+    #loop until we enter valid zip code in texas
+    is_invalid_zipcode = None
+
+    while is_invalid_zipcode  != False:
+        #Refresh the web-browser 
+        #this is necessary if a bad zip code is passed;
+        #will reset the pop up  to style: none 
+        Site.browser.refresh()
+        #check for length/non-digit entries...
+        zipcode = zip_entry_length()
+
+        Site.zipcode_entry(zipcode)
+        #here we are checking if the 
+        #bad zip pop up appears. 
+        is_invalid_zipcode = Site.invalid_zip()
+         
+        if is_invalid_zipcode == True:
+            print('Zip Code not Valid.')
+    
+    print('Navigating...')           
+    #click needed web page elements 
+    Site.navigate()  
+    
+    #get the HTML for site when all plans are shown
+    soup = Site.soup 
+    
+    #pass into RateScape
+    Rates = RateScrape(soup)
+
+    print('Starting Scrape...')
+    
+    df_rates = Rates.to_datafame()
+    #closes the browser after dataframe created
+    Site.browser.quit()
+
+    #save dataframe to correct path
+    path = path_entry()
+    save_as(path, df_rates)
+
+    print('Complete!')
